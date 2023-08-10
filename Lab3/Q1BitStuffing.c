@@ -21,7 +21,7 @@ int main()
             *q = *p;
             q++;
             p++;
-            count = 0;
+            // count = 0;
         }
         else
         {
@@ -51,7 +51,7 @@ int main()
             *q = *p;
             q++;
             p++;
-            count = 0;
+            // count = 0;
         }
         else
         {
@@ -64,7 +64,7 @@ int main()
             }
             if (count == 5)
             {
-                q++; // skip the next 0
+                p++; // skip the next 0
             }
             count = 0;
         }
