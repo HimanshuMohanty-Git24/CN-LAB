@@ -10,7 +10,7 @@ int main()
 {
     int sockfd, fd1, length, i;
     char buf[100], buf1[100];
-    struct sockaddr_in sa, ca; // Corrected typo: changed "sa ca" to "sa, ca"
+    struct sockaddr_in sa, ca;
 
     sockfd = socket(AF_INET, SOCK_STREAM, 0);
     sa.sin_family = AF_INET;
@@ -18,22 +18,22 @@ int main()
     sa.sin_port = htons(6034);
 
     i = bind(sockfd, (struct sockaddr *)&sa, sizeof(sa));
-    printf("test %d %d\n", sockfd, i); // Corrected formatting: added space between %d%d
+    printf("test %d %d\n", sockfd, i);
 
     listen(sockfd, 5);
-    length = sizeof(ca); // Corrected: Use 'ca' instead of 'sa' for client address
+    length = sizeof(ca);
     fd1 = accept(sockfd, (struct sockaddr *)&ca, &length);
 
-    int k = recv(fd1, buf, 100, 0); // Corrected function name from 'rev' to 'recv'
+    int k = recv(fd1, buf, 100, 0);
     buf[k] = '\0';
-    printf("%s \n", buf); // Corrected variable name from 'buff' to 'buf'
+    printf("%s \n", buf);
 
     printf("Enter a message\t");
-    fgets(buf1, sizeof(buf1), stdin); // Changed 'gets' to 'fgets' for safer input reading
+    fgets(buf1, sizeof(buf1), stdin);
     send(fd1, buf1, strlen(buf1), 0);
 
     close(fd1);
     close(sockfd);
 
-    return 0; // Added return statement
+    return 0;
 }
