@@ -26,7 +26,7 @@ int main()
     length = sizeof(ca);
     int k = recvfrom(sockfd, buf1, 100, 0, (struct sockaddr *)&ca, &length);
     buf1[k] = '\0';
-    printf("Receaved: %s \n", buf1);
+    printf("Received: %s \n", buf1);
     close(sockfd);
 
     return 0;
