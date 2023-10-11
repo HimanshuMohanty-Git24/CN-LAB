@@ -1,33 +1,42 @@
 #include <stdio.h>
-#include <sys/types.h>
+#include <unistd.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
-#include <unistd.h>
+#include <stdlib.h>
 #include <string.h>
 
 int main()
 {
-    int sockfd, length, i;
-    char buf[100], buf1[100];
+    int sockfd;
+    char buffer[100];
     struct sockaddr_in sa;
 
     sockfd = socket(AF_INET, SOCK_STREAM, 0);
+
     sa.sin_family = AF_INET;
     sa.sin_addr.s_addr = inet_addr("127.0.0.1");
-    sa.sin_port = htons(6034);
+    sa.sin_port = htons(60018); // Use htons to convert port to network byte order
 
-    i = connect(sockfd, (struct sockaddr *)&sa, sizeof(sa));
-    printf("Connected: %d\n", i);
+    connect(sockfd, (struct sockaddr *)&sa, sizeof(sa));
+    printf("Connected to the server.\n");
 
-    printf("Enter a message for Server:\t");
-    fgets(buf1, sizeof(buf1), stdin);
+    while (1)
+    {
+        printf("Enter a message: ");
+        fgets(buffer, sizeof(buffer), stdin);
 
-    send(sockfd, buf1, strlen(buf1), 0);
+        send(sockfd, buffer, strlen(buffer), 0);
 
-    int k = recv(sockfd, buf, 100, 0);
-    buf[k] = '\0';
-    printf("Received from Server: %s\n", buf);
+        int n = recv(sockfd, buffer, sizeof(buffer), 0);
+        if (n <= 0)
+        {
+            printf("Server disconnected.\n");
+            break;
+        }
+        buffer[n] = '\0';
+        printf("Server says: %s", buffer);
+    }
 
     close(sockfd);
 
