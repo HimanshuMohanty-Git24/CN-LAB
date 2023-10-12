@@ -1,0 +1,7 @@
+1.Wap to choose any one of the option (Prime no./Not prime,Even/Odd,Positive/Negative) ✅.
+2.Wap to implement multiple server with single client message transfer.
+3.wap to check if a string is palindrome or not. ✅
+4.wap to reverse a sentence.
+5.wap to deisplay the sum of array elelment.✅
+6.wap to multiple client and single server program with the following condition:
+    a)No numbers or special symbols in the message if there is then the program will be terminated.
