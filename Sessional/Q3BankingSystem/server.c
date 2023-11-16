@@ -1,10 +1,8 @@
 #include <stdio.h>
-#include <sys/types.h>
-#include <sys/socket.h>
-#include <netinet/in.h>
-#include <arpa/inet.h>
-#include <unistd.h>
+#include <stdlib.h>
 #include <string.h>
+#include <unistd.h>
+#include <arpa/inet.h>
 
 struct UserDetails
 {
@@ -18,8 +16,8 @@ struct UserDetails
 int main()
 {
     int sockfd, length, i;
+    char buffer[100];
     struct sockaddr_in sa, ca;
-    struct UserDetails users[5];
 
     sockfd = socket(AF_INET, SOCK_DGRAM, 0);
 
@@ -32,6 +30,7 @@ int main()
     printf("Server is waiting...\n");
 
     // Receive details from clients for user registration
+    struct UserDetails users[5];
     for (i = 0; i < 5; i++)
     {
         length = sizeof(ca);
@@ -39,33 +38,30 @@ int main()
         printf("Received registration details for User %d\n", i + 1);
     }
 
-    while (1)
+    // Simulate login attempt
+    struct UserDetails loginUser;
+    length = sizeof(ca);
+    recvfrom(sockfd, &loginUser, sizeof(struct UserDetails), 0, (struct sockaddr *)&ca, &length);
+
+    // Check if login details match any registered user
+    int userIndex = -1;
+    for (i = 0; i < 5; i++)
     {
-        // Receive login details from clients
-        struct UserDetails loginUser;
-        length = sizeof(ca);
-        recvfrom(sockfd, &loginUser, sizeof(struct UserDetails), 0, (struct sockaddr *)&ca, &length);
+        if (strcmp(users[i].userId, loginUser.userId) == 0 && strcmp(users[i].password, loginUser.password) == 0)
+        {
+            userIndex = i;
+            break;
+        }
+    }
 
-        // Check if login details match any registered user
-        int userIndex = -1;
-        for (i = 0; i < 5; i++)
-        {
-            if (strcmp(users[i].userId, loginUser.userId) == 0 && strcmp(users[i].password, loginUser.password) == 0)
-            {
-                userIndex = i;
-                break;
-            }
-        }
-
-        // Send login status to client
-        if (userIndex != -1)
-        {
-            sendto(sockfd, "Log In Successful. You can now transfer.", strlen("Log In Successful. You can now transfer."), 0, (struct sockaddr *)&ca, sizeof(ca));
-        }
-        else
-        {
-            sendto(sockfd, "Log In Unsuccessful.", strlen("Log In Unsuccessful."), 0, (struct sockaddr *)&ca, sizeof(ca));
-        }
+    // Send login status to client
+    if (userIndex != -1)
+    {
+        sendto(sockfd, "Log In Successful. You can now transfer.", strlen("Log In Successful. You can now transfer."), 0, (struct sockaddr *)&ca, sizeof(ca));
+    }
+    else
+    {
+        sendto(sockfd, "Log In Unsuccessful.", strlen("Log In Unsuccessful."), 0, (struct sockaddr *)&ca, sizeof(ca));
     }
 
     close(sockfd);

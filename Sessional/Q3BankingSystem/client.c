@@ -1,10 +1,8 @@
 #include <stdio.h>
-#include <sys/types.h>
-#include <sys/socket.h>
-#include <netinet/in.h>
-#include <arpa/inet.h>
-#include <unistd.h>
+#include <stdlib.h>
 #include <string.h>
+#include <unistd.h>
+#include <arpa/inet.h>
 
 struct UserDetails
 {
@@ -27,22 +25,25 @@ int main()
     sa.sin_port = htons(6025);
 
     // User registration - send details to server
-    struct UserDetails user;
-    printf("Enter your details for registration:\n");
-    printf("Account No: ");
-    scanf("%d", &user.accountNo);
-    printf("Name: ");
-    scanf("%s", user.name);
-    printf("Account Type (saving/current): ");
-    scanf("%s", user.accountType);
-    printf("User ID: ");
-    scanf("%s", user.userId);
-    printf("Password: ");
-    scanf("%s", user.password);
+    struct UserDetails users[5];
+    for (i = 0; i < 5; i++)
+    {
+        printf("Enter details for User %d:\n", i + 1);
+        printf("Account No: ");
+        scanf("%d", &users[i].accountNo);
+        printf("Name: ");
+        scanf("%s", users[i].name);
+        printf("Account Type (saving/current): ");
+        scanf("%s", users[i].accountType);
+        printf("User ID: ");
+        scanf("%s", users[i].userId);
+        printf("Password: ");
+        scanf("%s", users[i].password);
 
-    sendto(sockfd, &user, sizeof(struct UserDetails), 0, (struct sockaddr *)&sa, sizeof(sa));
+        sendto(sockfd, &users[i], sizeof(struct UserDetails), 0, (struct sockaddr *)&sa, sizeof(sa));
+    }
 
-    // User login - send details to server
+    // Simulate login attempt
     struct UserDetails loginUser;
     printf("Enter your User ID and Password for login:\n");
     printf("User ID: ");
