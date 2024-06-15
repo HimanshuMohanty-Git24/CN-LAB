@@ -1,0 +1,4 @@
+﻿  main.cpp
+D:\cpp dev\client2\main.cpp(29,49): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+D:\cpp dev\client2\main.cpp(48,36): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+  client2.vcxproj -> D:\cpp dev\client2\x64\Debug\client2.exe
